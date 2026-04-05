@@ -1,12 +1,13 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
-
+import { Controller, Get, Inject } from '@nestjs/common';
+import { SECRET_TOKEN, Secret } from '@app/application/config';
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(@Inject(SECRET_TOKEN) private readonly secret: Secret) {}
 
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  getHello() {
+    return {
+      secret: this.secret.CUTOFF_DATE,
+    };
   }
 }
