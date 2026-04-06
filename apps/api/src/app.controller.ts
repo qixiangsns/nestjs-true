@@ -7,7 +7,7 @@ export class AppController {
   @Get()
   getHello() {
     return {
-      secret: this.secret.CUTOFF_DATE,
+      secret: 'XXXXXX',
     };
   }
 }

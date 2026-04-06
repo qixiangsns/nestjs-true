@@ -1,8 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { SecretsModule } from '@app/framework/secret';
-import { SecretSchema, SECRET_TOKEN } from './config/secret.schema';
-import { EnvSchema, Env, ENV_TOKEN } from './config/env.schema';
+import { SecretSchema, SECRET_TOKEN, EnvSchema, Env, ENV_TOKEN } from './config';
+import {
+  RedisConnection,
+  MongoDbConnection,
+  PulsarConnection,
+  ClickhouseConnection,
+} from './connnections';
 
 @Module({
   imports: [
@@ -30,44 +35,11 @@ import { EnvSchema, Env, ENV_TOKEN } from './config/env.schema';
         }),
         inject: [ENV_TOKEN],
       },
-      // {
-      //   provide: SECRET_TOKEN,
-      //   schema: SecretSchema,
-      //   useFactory: (env: Env) =>
-      //     env.NODE_ENV === 'development'
-      //       ? {
-      //           providerType: 'env',
-      //         }
-      //       : {
-      //           providerType: 'vault',
-      //           vaultToken: env.VAULT_TOKEN,
-      //           vaultUrl: env.VAULT_URL,
-      //           vaultPath: env.VAULT_PATH,
-      //         },
-
-      //   inject: [ENV_TOKEN],
-      // },
-      // {
-      //   provide: SECRET_TOKEN,
-      //   schema: SecretSchema,
-      //   useFactory: () => ({
-      //     providerType: 'aws',
-      //     accessKeyId: '123',
-      //     secretAccessKey: '123',
-      //   }),
-      //   inject: [ENV_TOKEN],
-      // },
-      // {
-      //   provide: SECRET_TOKEN,
-      //   schema: SecretSchema,
-      //   useFactory: () => ({
-      //     providerType: 'vault',
-      //     vaultToken: '123',
-      //     vaultUrl: '123',
-      //     vaultPath: '123',
-      //   }),
-      // },
     ]),
+    RedisConnection(),
+    MongoDbConnection(),
+    PulsarConnection(),
+    ClickhouseConnection(),
   ],
   providers: [],
   exports: [],

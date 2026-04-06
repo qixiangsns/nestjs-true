@@ -5,11 +5,11 @@ import {
   OptionalFactoryDependency,
   Provider,
   InjectionToken,
+  Logger,
 } from '@nestjs/common';
 import { Redis, RedisOptions, Cluster, ClusterOptions, ClusterNode } from 'ioredis';
-
 interface RedisModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
-  connectionName: string | symbol;
+  provide: InjectionToken;
   useFactory: (...args: unknown[]) => Promise<RedisOptions> | RedisOptions;
   inject?: (InjectionToken | OptionalFactoryDependency)[];
 }
@@ -20,7 +20,7 @@ interface RedisClusterOptions {
 }
 
 interface RedisClusterModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
-  connectionName: string | symbol;
+  provide: InjectionToken;
   useFactory: (...args: unknown[]) => Promise<RedisClusterOptions> | RedisClusterOptions;
   inject?: (InjectionToken | OptionalFactoryDependency)[];
 }
@@ -32,17 +32,21 @@ interface RedisClusterModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'>
 export class RedisModule {
   static forRootAsync(options: RedisModuleAsyncOptions): DynamicModule {
     const provider: Provider<Redis> = {
-      provide: options.connectionName,
+      provide: options.provide,
       useFactory: async (...args: unknown[]): Promise<Redis> => {
+        const logger = new Logger(RedisModule.name);
         const connectionOptions = await options.useFactory(...args);
         const client = new Redis({ ...connectionOptions });
 
         const { host, port } = connectionOptions;
-        client.on('connect', () => {
-          console.log(`Connected to Redis: ${host}:${port}`);
+        client.on('ready', () => {
+          logger.log({ host, port }, `Connected to Redis ${options.provide.toString()}`);
         });
         client.on('error', (error) => {
-          console.error(`Error connecting to Redis: ${host}:${port}`, error);
+          logger.error(
+            { host, port, error: error.message },
+            `Error connecting to Redis ${options.provide.toString()}`,
+          );
         });
         return client;
       },
@@ -67,12 +71,20 @@ export class RedisModule {
 export class RedisClusterModule {
   static forRootAsync(options: RedisClusterModuleAsyncOptions): DynamicModule {
     const clientProvider: Provider<Cluster> = {
-      provide: options.connectionName,
+      provide: options.provide,
       useFactory: async (...args: unknown[]): Promise<Cluster> => {
+        const logger = new Logger(RedisClusterModule.name);
         const { clusterNodes, clusterOptions } = await options.useFactory(...args);
         const client = new Cluster(clusterNodes, clusterOptions);
-        client.on('connect', () => {
-          console.log(`Connected to Redis Cluster: `, clusterNodes);
+
+        client.on('ready', () => {
+          logger.log({ clusterNodes }, `Connected to Redis Cluster`);
+        });
+        client.on('error', (error) => {
+          logger.error(
+            { clusterNodes, error: error instanceof Error ? error.message : 'Unknown error' },
+            `Error connecting to Redis Cluster`,
+          );
         });
         return client;
       },

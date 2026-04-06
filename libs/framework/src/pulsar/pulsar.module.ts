@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 
 interface PulsarModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
-  connectionName: string | symbol;
+  provide: InjectionToken;
   useFactory: (...args: unknown[]) => Promise<ClientConfig> | ClientConfig;
   inject?: (InjectionToken | OptionalFactoryDependency)[];
 }
@@ -21,7 +21,7 @@ interface PulsarModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
 export class PulsarModule {
   static forRootAsync(options: PulsarModuleAsyncOptions): DynamicModule {
     const provider: Provider<Client> = {
-      provide: options.connectionName,
+      provide: options.provide,
       useFactory: async (...args: unknown[]): Promise<Client> => {
         const connectionOptions = await options.useFactory(...args);
         const client = new Client(connectionOptions);

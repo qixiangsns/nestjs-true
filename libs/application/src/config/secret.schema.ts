@@ -3,7 +3,12 @@ import { z } from 'zod';
 export const SECRET_TOKEN = Symbol('SECRET_TOKEN');
 
 export const SecretSchema = z.object({
-  CUTOFF_DATE: z.coerce.date(),
+  REDIS_HOST: z.string(),
+  REDIS_PORT: z.coerce.number(),
+  MONGO_DB_URL: z.string(),
+  PULSAR_URL: z.string(),
+  PULSAR_TOKEN: z.string(),
+  CLICKHOUSE_URL: z.string(),
 });
 
 export type Secret = z.infer<typeof SecretSchema>;
