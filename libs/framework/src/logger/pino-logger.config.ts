@@ -19,7 +19,7 @@ const DEFAULT_OPTIONS = {
 const PRODUCTION_OPTIONS = {
   depthLimit: 2,
   level: 'info',
-  mixin: () => traceMixin(),
+  mixin: () => ({ ...traceMixin() }),
 } as const satisfies Options;
 
 const DEVELOPMENT_OPTIONS = {
@@ -29,7 +29,7 @@ const DEVELOPMENT_OPTIONS = {
     target: 'pino-pretty',
     options: PRETTY_OPTIONS,
   },
-  mixin: () => callerMixin(new Error().stack || ''),
+  mixin: () => ({ ...callerMixin(new Error().stack) }),
 } as const satisfies Options;
 
 export const getPinoOptions = (isProduction: boolean): Options => ({

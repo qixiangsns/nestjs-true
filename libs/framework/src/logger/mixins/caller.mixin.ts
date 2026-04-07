@@ -1,4 +1,7 @@
-export function callerMixin(stackTrace: string) {
+export function callerMixin(stackTrace?: string) {
+  if (!stackTrace) {
+    return {};
+  }
   let filePath = '';
   const callerTrace = stackTrace
     .split('\n')
