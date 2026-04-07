@@ -8,6 +8,8 @@ export const CLICKHOUSE_TOKENS = {
 export const ClickhouseConnection = () =>
   ClickhouseModule.forRootAsync({
     provide: CLICKHOUSE_TOKENS.PRIMARY,
-    useFactory: (secret: Secret) => ({ url: secret.CLICKHOUSE_URL }),
+    useFactory: (secret: Secret) => ({
+      url: secret.CLICKHOUSE_URL,
+    }),
     inject: [SECRET_TOKEN],
   });

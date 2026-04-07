@@ -70,7 +70,7 @@ export class SecretsModule {
       useFactory: async () => {
         const logger = new Logger(SecretsModule.name);
         const secret = await loadSecret(option, option.schema);
-        logger.log(secret, `Secret loaded for ${option.provide.toString()}`);
+        logger.log({ secret }, `Secret loaded for ${option.provide.toString()}`);
         return secret;
       },
     }));
@@ -88,7 +88,7 @@ export class SecretsModule {
         const logger = new Logger(SecretsModule.name);
         const definition = await useFactory(...args);
         const secret = await loadSecret(definition, schema);
-        logger.log(secret, `Secret loaded for ${provide.toString()}`);
+        logger.log({ secret }, `Secret loaded for ${provide.toString()}`);
         return secret;
       },
       inject: inject ?? [],
