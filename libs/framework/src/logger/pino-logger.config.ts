@@ -1,7 +1,6 @@
 import { Options } from 'pino-http';
 import { PrettyOptions } from 'pino-pretty';
-import { callerMixin } from './mixins/caller.mixin';
-import { traceMixin } from './mixins/trace.mixin';
+import { callerMixin, traceMixin, versionMixin } from './mixins';
 
 const PRETTY_OPTIONS = {
   levelFirst: true,
@@ -19,7 +18,7 @@ const DEFAULT_OPTIONS = {
 const PRODUCTION_OPTIONS = {
   depthLimit: 2,
   level: 'info',
-  mixin: () => ({ ...traceMixin() }),
+  mixin: () => ({ ...traceMixin(), ...versionMixin() }),
 } as const satisfies Options;
 
 const DEVELOPMENT_OPTIONS = {

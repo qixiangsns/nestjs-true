@@ -3,6 +3,7 @@
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
+    "resolveJsonModule": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
@@ -18,18 +19,11 @@
     "strictBindCallApply": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@app/application": [
-        "libs/application/src"
-      ],
-      "@app/application/*": [
-        "libs/application/src/*"
-      ],
-      "@app/framework": [
-        "libs/framework/src"
-      ],
-      "@app/framework/*": [
-        "libs/framework/src/*"
-      ]
+      "@app/application": ["libs/application/src"],
+      "@app/application/*": ["libs/application/src/*"],
+      "@app/framework": ["libs/framework/src"],
+      "@app/framework/*": ["libs/framework/src/*"],
+      "@package": ["./package.json"]
     }
   }
 }

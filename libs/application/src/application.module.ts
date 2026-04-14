@@ -13,10 +13,10 @@ import { getPinoOptions } from '@app/framework/logger/pino-logger.config';
 import { UserModule } from './modules/user/user.module';
 
 const FeatureModules = [UserModule];
-const MongoModules = [MongoDbConnection()];
-const RedisModules = [RedisConnection()];
-const PulsarModules = [PulsarConnection()];
-const ClickhouseModules = [ClickhouseConnection()];
+const MongoConnModules = [MongoDbConnection()];
+const RedisConnModules = [RedisConnection()];
+const PulsarConnModules = [PulsarConnection()];
+const ClickhouseConnModules = [ClickhouseConnection()];
 const SecretsModules = [
   SecretsModule.forRoot([
     {
@@ -57,10 +57,10 @@ const LoggerModules = [
     ConfigModule.forRoot(),
     ...SecretsModules,
     ...LoggerModules,
-    ...MongoModules,
-    ...RedisModules,
-    ...PulsarModules,
-    ...ClickhouseModules,
+    ...MongoConnModules,
+    ...RedisConnModules,
+    ...PulsarConnModules,
+    ...ClickhouseConnModules,
     ...FeatureModules,
   ],
   exports: [...FeatureModules],
