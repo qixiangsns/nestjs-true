@@ -5,9 +5,7 @@ export class UserService {
   private readonly logger = new Logger(UserService.name);
   constructor() {}
 
-  onModuleInit() {
-    this.logger.log('UserService initialized');
-  }
+  onModuleInit() {}
 
   sayHello() {
     return 'Hello World!';
